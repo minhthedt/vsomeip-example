@@ -13,5 +13,7 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}" CACHE PATH "Install path"
 # Include all subdirectories
 add_subdirectory(client/sender)
 add_subdirectory(server/receiver)
+add_subdirectory(example/mutilcast_example)
+add_subdirectory(example/broadcast_example)
 
 # Add more subdirectories as needed

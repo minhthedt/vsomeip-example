@@ -3,3 +3,4 @@ tools/*
 !tools/install_vsomeip.sh
 bin/*
 !bin/run_*.sh
+build/
