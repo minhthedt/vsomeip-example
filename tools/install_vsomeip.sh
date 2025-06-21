@@ -1,3 +1,4 @@
+#!/bin/bash
 #1.0 ./install_Cmake_20.sh
 # Check CMake version
 cmake_version=$(cmake --version 2>/dev/null | head -n 1 | awk '{print $3}')

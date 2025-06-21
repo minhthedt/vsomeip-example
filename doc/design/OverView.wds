@@ -1,0 +1,8 @@
+@startuml
+participant vsomeipd as vsomeip_daemon
+participant client1 as client1
+participant client2 as client2
+
+client1->vsomeip_daemon: register()
+client2->vsomeip_daemon: register()
+@enduml
