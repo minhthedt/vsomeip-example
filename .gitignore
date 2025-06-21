@@ -1,3 +1,5 @@
 # Ignore a folder but track its subfolder
 tools/*
 !tools/install_vsomeip.sh
+bin/*
+!bin/run_*.sh
