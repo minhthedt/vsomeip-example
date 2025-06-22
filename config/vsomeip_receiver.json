@@ -1,11 +1,11 @@
 {
-    "unicast" : "192.168.1.8",
+    "unicast" : "192.168.1.5",
     "logging" :
     {
         "level" : "debug",
         "console" : "true",
         "file" : { "enable" : "false", "path" : "/tmp/vsomeip.log" },
-        "dlt" : "false"
+        "dlt" : "true"
     },
     "applications" :
     [
