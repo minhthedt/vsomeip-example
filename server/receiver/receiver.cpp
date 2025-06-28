@@ -1,13 +1,17 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
- 
+
 #include <vsomeip/vsomeip.hpp>
+#include <dlt/dlt.h>
  
 #define SAMPLE_SERVICE_ID 0x1234
 #define SAMPLE_INSTANCE_ID 0x5678
 #define SAMPLE_METHOD_ID 0x0421
- 
+
+// 🔹 Define DLT context
+DLT_DECLARE_CONTEXT(my_dlt_context);
+
 std::shared_ptr<vsomeip::application> app;
  
 void on_message(const std::shared_ptr<vsomeip::message> &_request) {
@@ -26,7 +30,9 @@ void on_message(const std::shared_ptr<vsomeip::message> &_request) {
         << std::setw(4) << std::setfill('0') << std::hex << _request->get_client() << "/"
         << std::setw(4) << std::setfill('0') << std::hex << _request->get_session() << "] "
         << ss.str() << std::endl;
- 
+
+    DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING("Received message: "), DLT_STRING(ss.str().c_str()));
+
     // Create response
     std::shared_ptr<vsomeip::message> its_response = vsomeip::runtime::get()->create_response(_request);
     its_payload = vsomeip::runtime::get()->create_payload();
@@ -38,9 +44,11 @@ void on_message(const std::shared_ptr<vsomeip::message> &_request) {
     its_response->set_payload(its_payload);
     app->send(its_response);
 }
- 
+
 int main() {
- 
+    DLT_REGISTER_APP("APP2", "VSOMEIP Application");
+    DLT_REGISTER_CONTEXT(my_dlt_context, "APP2", "VSOMEIP Service Context");
+
    app = vsomeip::runtime::get()->create_application("World");
    app->init();
    app->register_message_handler(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID, SAMPLE_METHOD_ID, on_message);

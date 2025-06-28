@@ -5,7 +5,7 @@
         "level" : "debug",
         "console" : "true",
         "file" : { "enable" : "false", "path" : "/var/log/vsomeip.log" },
-        "dlt" : "false"
+        "dlt" : "true"
     },
     "applications" :
     [

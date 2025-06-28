@@ -6,11 +6,15 @@
 #include <thread>
  
 #include <vsomeip/vsomeip.hpp>
+#include <dlt/dlt.h>
  
 #define SAMPLE_SERVICE_ID 0x1234
 #define SAMPLE_INSTANCE_ID 0x5678
 #define SAMPLE_METHOD_ID 0x0421
- 
+
+// 🔹 Define DLT context
+DLT_DECLARE_CONTEXT(my_dlt_context);
+
 std::shared_ptr< vsomeip::application > app;
 std::mutex mutex;
 std::condition_variable condition;
@@ -49,7 +53,9 @@ void on_message(const std::shared_ptr<vsomeip::message> &_response) {
      ss << std::setw(2) << std::setfill('0') << std::hex
         << (int)*(its_payload->get_data()+i) << " ";
   }
- 
+  
+  DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING("Received message: "), DLT_STRING(ss.str().c_str()));
+
   std::cout << "CLIENT: Received message with Client/Session ["
       << std::setw(4) << std::setfill('0') << std::hex << _response->get_client() << "/"
       << std::setw(4) << std::setfill('0') << std::hex << _response->get_session() << "] "
@@ -63,10 +69,13 @@ void on_availability(vsomeip::service_t _service, vsomeip::instance_t _instance,
             << (_is_available ? "available." : "NOT available.")
             << std::endl;
     if (_is_available ) condition.notify_one();
+    
 }
  
 int main() {
- 
+    DLT_REGISTER_APP("APP1", "VSOMEIP Application");
+    DLT_REGISTER_CONTEXT(my_dlt_context, "APP1", "VSOMEIP Service Context");
+
     app = vsomeip::runtime::get()->create_application("Hello");
     app->init();
     app->register_availability_handler(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID, on_availability);

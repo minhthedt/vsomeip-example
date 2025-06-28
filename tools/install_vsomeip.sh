@@ -1,6 +1,12 @@
 #!/bin/bash
 #1.0 ./install_Cmake_20.sh
 # Check CMake version
+
+sudo apt update
+sudo apt install -y autoconf automake libtool build-essential cmake pkg-config zlib1g-dev
+sudo apt install -y dlt-daemon libdlt-dev dlt-tools
+sudo apt install -y git screen
+
 cmake_version=$(cmake --version 2>/dev/null | head -n 1 | awk '{print $3}')
 required_version="3.20.0"
 
@@ -54,8 +60,19 @@ if [[ ! -d "vsomeip" ]]; then
 else
     echo "vsomeip folder already exists. Skipping clone."
 fi
-#3.0 install vsomeip
+#3.0 build&install vsomeip, enable DLT log
 cd vsomeip
-mkdir build
-cmake -Bbuild -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" -DENABLE_SIGNAL_HANDLING=1 -DCMAKE_CXX_FLAGS="-Wno-unused-variable" .
+
+if [[ "$1" == "clean" ]]; then
+    echo "Cleaning build directory..."
+    sudo rm -rf build
+fi
+
+if [ ! -d "build" ]; then
+    sudo mkdir build
+fi
+
+# must install dlt first because vsomeip depend on it.
+sudo cmake -Bbuild -DDISABLE_DLT=0 -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" -DENABLE_SIGNAL_HANDLING=1 -DCMAKE_CXX_FLAGS="-Wno-unused-variable" .
 sudo cmake --build build --target install -j8
+ 
