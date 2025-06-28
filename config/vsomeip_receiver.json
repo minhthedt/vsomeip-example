@@ -4,7 +4,7 @@
     {
         "level" : "debug",
         "console" : "true",
-        "file" : { "enable" : "false", "path" : "/tmp/vsomeip.log" },
+        "file" : { "enable" : "true", "path" : "/tmp/vsomeip.log" },
         "dlt" : "true"
     },
     "applications" :
@@ -27,7 +27,7 @@
     {
         "enable" : "true",
         "multicast" : "224.224.224.245",
-        "port" : "30490",
+        "port" : "30495",
         "protocol" : "udp",
         "initial_delay_min" : "10",
         "initial_delay_max" : "100",
