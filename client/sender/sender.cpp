@@ -36,7 +36,7 @@ void run() {
   }
   its_payload->set_data(its_payload_data);
   request->set_payload(its_payload);
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 10000; i++) {
     app->send(request);
     std::this_thread::sleep_for(std::chrono::seconds(3));
   }

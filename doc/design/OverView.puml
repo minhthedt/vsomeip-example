@@ -1,15 +1,34 @@
 @startuml
-participant vsomeipd as vsomeip_daemon
-participant sender as client1
-participant receiver as client2
-participant "224.0.0.22" as enss
-participant "224.224.224.245" as discovery
+autonumber
+box "PC1(192.168.1.5)" #LightBlue
+participant "sender" as client1
+end box
+box "Switch(192.168.1.1)"
+participant "224.0.0.22" as router_igmp
+participant "224.224.224.245" as rounter_mutilcast
+end box
 
-client2->enss: IGMPv3(request to Join group mutilcast)
-loop 2s
-client2->discovery: send Offer
+box "PC2(192.168.1.7)" #LightBlue
+participant "receiver" as client2
+
+end box
+note over client2: service_id = 0x1234\ninstance_id = 0x5678\nmethod_id = 0x0421
+note over client1: src: 192.168.1.5 \ndst:224.0.0.22
+client1->router_igmp: IGMPv3 Join to multicast group
+
+opt resend (max = 4 times) until receive offer message
+note over client1: src: 192.168.1.5:30490 \ndst:224.224.224.245:30490
+client1->rounter_mutilcast: UDP(SOME/IP-SD) send Find service
+end
+client2->router_igmp: IGMPv3 Join to multicast group
+loop every 2s(configurable)
+client2->rounter_mutilcast: UDP(SOME/IP-SD) send Offer service
 end
 
-client1->discovery: send Find
-
+rounter_mutilcast->client1: ON_OFFER_SERVICE(0000): [1234.5678:0.0]
+client1->client1: Service [1234.5678] is available
+client1->rounter_mutilcast: send(request{1234.5678.0421, payload})
+rounter_mutilcast->client2: on_message(request)
+client2->rounter_mutilcast: send(response{request, payload})
+rounter_mutilcast->client1: on_message(response)
 @enduml
