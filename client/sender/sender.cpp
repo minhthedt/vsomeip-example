@@ -36,6 +36,8 @@ void run() {
   }
   its_payload->set_data(its_payload_data);
   request->set_payload(its_payload);
+  bool use_tcp_ = true;
+  request->set_reliable(use_tcp_); // Use TCP for reliable communication, default is UDP
   for (int i = 0; i < 10000; i++) {
     app->send(request);
     std::this_thread::sleep_for(std::chrono::seconds(3));
