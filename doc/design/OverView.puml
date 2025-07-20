@@ -12,23 +12,64 @@ box "PC2(192.168.1.7)" #LightBlue
 participant "receiver" as client2
 
 end box
-note over client2: service_id = 0x1234\ninstance_id = 0x5678\nmethod_id = 0x0421
-note over client1: src: 192.168.1.5 \ndst:224.0.0.22
-client1->router_igmp: IGMPv3 Join to multicast group
+note over client1: Client ID: 0x1313
+note over client2
+service_id = 0x1234
+instance_id = 0x5678
+method_id = 0x0421
+unreliable : **<color blue>30509</color>**
+end note
+note right of client1: IGMPv3 protocol\nsrc: 192.168.1.5 \ndst: 224.0.0.22
+client1->router_igmp: Join to multicast group
 
 opt resend (max = 4 times) until receive offer message
-note over client1: src: 192.168.1.5:30490 \ndst:224.224.224.245:30490
-client1->rounter_mutilcast: UDP(SOME/IP-SD) send Find service
+note right of client1
+UDP protocol
+src: 192.168.1.5:30490
+dst: 224.224.224.245:30490
+Message Type: 0x02 (Notification)
+Message ID: 0xffff8100
+Service ID 0x1234, Instance ID 0x5678, Version 255.4294967295
+end note
+client1->rounter_mutilcast: (SOME/IP-SD) send Find service
 end
 client2->router_igmp: IGMPv3 Join to multicast group
 loop every 2s(configurable)
-client2->rounter_mutilcast: UDP(SOME/IP-SD) send Offer service
+note left of client2
+UDP protocol
+src: 192.168.1.7:30490
+dst: 224.224.224.245:30490
+Message Type: 0x02 (Notification)
+Message ID: 0xffff8100
+Service ID 0x1234, Instance ID 0x5678, Version 0.0
+end note
+client2->rounter_mutilcast: (SOME/IP-SD) send Offer service
 end
 
 rounter_mutilcast->client1: ON_OFFER_SERVICE(0000): [1234.5678:0.0]
 client1->client1: Service [1234.5678] is available
-client1->rounter_mutilcast: send(request{1234.5678.0421, payload})
-rounter_mutilcast->client2: on_message(request)
-client2->rounter_mutilcast: send(response{request, payload})
-rounter_mutilcast->client1: on_message(response)
+
+note right of client1
+UDP protocol
+src: 192.168.1.5:**<color blue>38366</color>** 
+dst: 192.168.1.7:**<color blue>30509</color>**
+Message type = (0x00) request
+Message ID: 0x12340421
+Client ID: 0x1313
+Session ID: 0x0001 -> increase after each calling
+end note
+client1-[#blue]>client2: (SOME/IP)send(request{1234.5678.0421, payload})
+client2->client2: on_message(request)
+
+note left of client2
+UDP protocol
+src: 192.168.1.7:30509
+dst: 192.168.1.5:38366
+Message type = (0x80) response
+Message ID: 0x12340421
+Client ID: 0x1313
+Session ID: 0x0001
+end note
+client2-[#blue]>client1: (SOME/IP)send(response{request, payload})
+client1->client1: on_message(response)
 @enduml
