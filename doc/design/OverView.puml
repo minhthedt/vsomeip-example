@@ -14,39 +14,44 @@ participant "receiver" as client2
 end box
 note over client1: Client ID: 0x1313
 note over client2
-service_id = 0x1234
-instance_id = 0x5678
-method_id = 0x0421
-unreliable : **<color blue>30509</color>**
+    service_id = 0x1234
+    instance_id = 0x5678
+    method_id = 0x0421
+    unreliable : **<color blue>30509</color>**
 end note
 note right of client1: IGMPv3 protocol\nsrc: 192.168.1.5 \ndst: 224.0.0.22
 client1->router_igmp: Join to multicast group
 
-opt resend (max = 4 times) until receive offer message
+opt after init, client send "Find service" 4 times (repetitions_max + 1) until receive offer message
 note right of client1
-UDP protocol
-src: 192.168.1.5:30490
-dst: 224.224.224.245:30490
-Message Type: 0x02 (Notification)
-Message ID: 0xffff8100
-Service ID 0x1234, Instance ID 0x5678, Version 255.4294967295
+    UDP protocol
+    src: 192.168.1.5:30490
+    dst: 224.224.224.245:30490
+    Message Type: 0x02 (Notification)
+    Message ID: 0xffff8100
+    Service ID 0x1234, Instance ID 0x5678, Version 255.4294967295
 end note
 client1->rounter_mutilcast: (SOME/IP-SD) send Find service
+rounter_mutilcast->client2: ON_FIND_SERVICE(...)
+client2->rounter_mutilcast: (SOME/IP-SD) send Offer service
+rounter_mutilcast->client1: ON_OFFER_SERVICE(0000): [1234.5678:0.0]
 end
 client2->router_igmp: IGMPv3 Join to multicast group
-loop every 2s(configurable)
+loop every 2000ms(cyclic_offer_delay)
 note left of client2
-UDP protocol
-src: 192.168.1.7:30490
-dst: 224.224.224.245:30490
-Message Type: 0x02 (Notification)
-Message ID: 0xffff8100
-Service ID 0x1234, Instance ID 0x5678, Version 0.0
+    UDP protocol
+    src: 192.168.1.7:30490
+    dst: 224.224.224.245:30490
+    Message Type: 0x02 (Notification)
+    Message ID: 0xffff8100
+    Service ID 0x1234, Instance ID 0x5678, Version 0.0
+    Endpoint Option (192.168.1.7:30509 (UDP))
 end note
 client2->rounter_mutilcast: (SOME/IP-SD) send Offer service
+rounter_mutilcast->client1: ON_OFFER_SERVICE(0000): [1234.5678:0.0]
 end
 
-rounter_mutilcast->client1: ON_OFFER_SERVICE(0000): [1234.5678:0.0]
+
 client1->client1: Service [1234.5678] is available
 
 note right of client1
@@ -72,4 +77,7 @@ Session ID: 0x0001
 end note
 client2-[#blue]>client1: (SOME/IP)send(response{request, payload})
 client1->client1: on_message(response)
+opt if client don't receive Offer message in 2000ms (cyclic_offer_delay) => client think server is NOT available
+client1->client1: <color red>Service [1234.5678] is NOT available </color>
+end
 @enduml
