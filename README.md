@@ -54,8 +54,14 @@ make install
 
 ## 📝 Design Overview
 
-#### 1) OfferService Repetition Pattern
+#### 1) Server init
+![OverView](doc/design/OverView.svg)
+
+#### 2) OfferService Repetition Pattern
 ![OfferService_Repetition](doc/picture/OfferService_Repetition_Pattern.png)
 
-#### 2) Server init
-![OverView](doc/design/OverView.svg)
+#### 3) someip_udp_packet(offerservice)
+![OfferService_Repetition](doc/picture/someip_udp_packet(offerservice).png)
+
+#### 4) someip_tcp_packet(request_response)
+![OfferService_Repetition](doc/picture/someip_tcp_packet(request_response).png)

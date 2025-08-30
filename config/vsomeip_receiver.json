@@ -1,11 +1,15 @@
 {
-    "unicast" : "192.168.1.7",
+    "unicast" : "192.168.1.9",
     "logging" :
     {
         "level" : "debug",
         "console" : "true",
         "file" : { "enable" : "true", "path" : "/tmp/vsomeip.log" },
-        "dlt" : "true"
+        "dlt" : "true",
+		"version" : { "enable" : "true", "interval" : "10" },
+        "memory_log_interval": "5",
+        "status_log_interval": "5",
+        "statistics" : { "interval" : "10000", "min-frequency" : "50", "max-frequency" : "1000" }
     },
     "applications" :
     [
@@ -19,7 +23,7 @@
         {
             "service" : "0x1234",
             "instance" : "0x5678",
-            "unreliable" : "30509"
+            "reliable" : "30509"
         }
     ],
     "routing" : "World",
