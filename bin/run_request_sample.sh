@@ -10,9 +10,9 @@ tcpdump -i enp0s3 -w "tcpdump_${START_TIME}_to_END.pcap" &
 TCPDUMP_PID=$!
 
 # Run your application
-./sender
+./request-sample
 
-# After sender exits, get end time
+# After request-sample exits, get end time
 END_TIME=$(date +%Y%m%d_%H%M%S)
 
 # Kill tcpdump

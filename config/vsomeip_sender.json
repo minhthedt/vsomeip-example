@@ -7,14 +7,26 @@
         "file" : { "enable" : "true", "path" : "/var/log/vsomeip.log" },
         "dlt" : "true"
     },
+    "tracing" :
+    {
+        "enable" : "true"
+    },
     "applications" :
     [
         {
             "name" : "Hello",
-            "id" : "0x1313"
+            "id" : "0x1314"
         }
     ],
-    "routing" : "Hello",
+    "clients" :
+    [
+        {
+            "service" : "0x1234",
+            "instance" : "0x5678",
+            "reliable" : ["33333", "33334"]
+        }
+    ],
+    "routing" : "World",
     "service-discovery" :
     {
         "enable" : "true",
