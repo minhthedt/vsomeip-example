@@ -25,10 +25,9 @@ sudo apt install -y openssh-server screen git
 sudo apt install -y net-tools netcat socat tcpdump
 sudo apt install dlt-daemon libdlt-dev dlt-tools
 
-# Download example and install Cmake, boost, vsomeip
+# Download example and install Cmake, boost, dlt, vsomeip
 git clone https://github.com/minhthedt/vsomeip-example.git
-cd vsomeip-example/tool
-sudo ./install_vsomeip.sh
+sudo ./set_env.sh 2>&1 | tee log.txt
 ```
 #### Build vsomeip-example
 ```bash
@@ -36,6 +35,7 @@ cd vsomeip-example
 mkdir build
 cd build
 cmake ..
+make -j"$(nproc)"
 make install
 ```
 #### <h4 style="color:#0074D9">Verify Multicast (make sure 2 PC can send/receive multicast)</h4>

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 # Variables
 INSTALL_DIR="/usr/local"
 BOOST_VERSION="1_81_0"
@@ -46,11 +44,13 @@ cd libraries
 # Install dependencies
 sudo apt update
 sudo apt install -y autoconf automake libtool build-essential cmake pkg-config zlib1g-dev \
-    git screen \
+    git screen dlt-daemon libdlt-dev dlt-tools\
     libboost-system-dev libboost-thread-dev libboost-log-dev libboost-program-options-dev \
     libboost-regex-dev libboost-filesystem-dev
-#sudo apt install dlt-daemon libdlt-dev dlt-tools
-# Check and install CMake
+
+#the script exits immediately at the failed command
+set -e
+# 1. Check and install CMake
 cmake_version=$(cmake --version 2>/dev/null | head -n 1 | awk '{print $3}')
 if [[ -z "$cmake_version" || "$(printf '%s\n' "$CMAKE_REQUIRED_VERSION" "$cmake_version" | sort -V | head -n 1)" != "$CMAKE_REQUIRED_VERSION" ]]; then
     echo "Installing CMake $CMAKE_INSTALL_VERSION..."
@@ -72,7 +72,7 @@ else
     echo "CMake version $cmake_version is sufficient."
 fi
 
-# Check and install Boost
+# 2. Check and install Boost
 boost_version=$(get_boost_version)
 if [[ -n "$boost_version" ]] && version_ge "$boost_version" "${BOOST_VERSION_DOTS//_/.}"; then
     echo "Boost $boost_version already installed in $INSTALL_DIR. Skipping download and install."
@@ -90,7 +90,23 @@ else
     popd
 fi
 
-# Clone vsomeip
+# 3. Check and install dlt-daemon
+if ! command -v dlt-daemon &> /dev/null; then
+    echo "dlt-daemon not found. Installing..."
+    sudo git clone https://github.com/GENIVI/dlt-daemon.git dlt-daemon
+    cd dlt-daemon || exit 1
+    sudo mkdir build && cd build || exit 1
+    sudo cmake .. || exit 1
+    sudo make -j"$(nproc)" || exit 1
+    sudo make install || exit 1
+    cd / || exit 1
+    echo "dlt-daemon installed successfully."
+else
+    echo "dlt-daemon is installed at: $(command -v dlt-daemon)"
+fi
+
+
+# 4. Clone vsomeip
 if [[ ! -d "$VSOMEIP_DIR" ]]; then
     echo "Cloning vsomeip repository..."
     sudo git clone https://github.com/COVESA/vsomeip.git
