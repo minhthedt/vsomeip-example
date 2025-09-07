@@ -42,7 +42,7 @@ make install
 ```
 #(optional) all traffic destined for any multicast address (224.0.0.0/4) out through the enp0s3 network interface.
     ifconfig
-    sudo ip route add 224.0.0.0/4 dev enp0s3
+    sudo ip route add 224.0.0.0/4 dev enp0s3 (alternative: sudo route add -net 224.0.0.0/4 dev enp0s3)
 #show routing table
     netstat -rn
 

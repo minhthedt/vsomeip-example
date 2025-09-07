@@ -6,7 +6,7 @@ export VSOMEIP_CONFIGURATION=../config/vsomeip_sender.json
 START_TIME=$(date +%Y%m%d_%H%M%S)
 
 # Start tcpdump in the background
-tcpdump -i enp0s3 -w "tcpdump_${START_TIME}_to_END.pcap" &
+tcpdump -i eth0 -w "tcpdump_${START_TIME}_to_END.pcap" &
 TCPDUMP_PID=$!
 
 # Run your application

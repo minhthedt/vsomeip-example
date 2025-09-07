@@ -1,6 +1,6 @@
 # Ignore a folder but track its subfolder
 tools/*
-!tools/set_env.sh
+!tools/*.sh
 bin/*
-!bin/run_*.sh
+!bin/*.sh
 build/
