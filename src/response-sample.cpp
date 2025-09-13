@@ -49,7 +49,7 @@ int main() {
     DLT_REGISTER_APP("APP2", "VSOMEIP Application");
     DLT_REGISTER_CONTEXT(my_dlt_context, "APP2", "VSOMEIP Service Context");
 
-   app = vsomeip::runtime::get()->create_application("World");
+   app = vsomeip::runtime::get()->create_application("response-sample");
    app->init();
    app->register_message_handler(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID, SAMPLE_METHOD_ID, on_message);
    app->offer_service(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID);
