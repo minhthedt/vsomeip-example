@@ -13,7 +13,11 @@ pushd tools
 #install vsomeip and dependencies
 if ! command -v ts &> /dev/null; then
     ./install_vsomeip.sh 2>&1 | tee -a $LOG_FILE
+    ./install_capi_someip.sh 2>&1 | tee -a $LOG_FILE
+    ./install_fidl_gen.sh 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a $LOG_FILE
 else
     ./install_vsomeip.sh 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a $LOG_FILE
+    ./install_capi_someip.sh 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a $LOG_FILE
+    ./install_fidl_gen.sh 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a $LOG_FILE
 fi
 popd

@@ -4,3 +4,5 @@ tools/*
 bin/*
 !bin/*.sh
 build/
+src/capi-example/fidl-src-gen/*
+!src/capi-example/fidl-src-gen/*.sh

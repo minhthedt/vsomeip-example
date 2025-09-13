@@ -1,8 +1,9 @@
 #!/bin/bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 export VSOMEIP_APPLICATION_NAME=notify-sample
-export VSOMEIP_CONFIGURATION=/home/worker/TRAINING/VSOMEIP-example/vsomeip_notifier.json
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export VSOMEIP_CONFIGURATION=$SCRIPT_DIR/../config/vsomeip_notifier.json
+
 pushd "$SCRIPT_DIR"
 # Get start time
 START_TIME=$(date +%Y%m%d_%H%M%S)

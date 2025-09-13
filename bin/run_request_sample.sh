@@ -1,7 +1,8 @@
 #!/bin/bash
-export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-export VSOMEIP_CONFIGURATION=../config/vsomeip_sender.json
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+export VSOMEIP_CONFIGURATION=$SCRIPT_DIR/../config/vsomeip_sender.json
+
 pushd "$SCRIPT_DIR"
 # Get start time
 START_TIME=$(date +%Y%m%d_%H%M%S)
