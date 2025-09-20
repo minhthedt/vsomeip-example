@@ -2,14 +2,11 @@
     "unicast" : "172.17.0.5",
     "logging" :
     {
-        "level" : "debug",
+        "level" : "verbose",
         "console" : "true",
         "file" : { "enable" : "true", "path" : "/tmp/vsomeip.log" },
         "dlt" : "true",
-		"version" : { "enable" : "true", "interval" : "10" },
-        "memory_log_interval": "5",
-        "status_log_interval": "5",
-        "statistics" : { "interval" : "10000", "min-frequency" : "50", "max-frequency" : "1000" }
+		"version" : { "enable" : "true", "interval" : "10" }
     },
     "tracing" :
     {
@@ -26,7 +23,7 @@
     [
         {
             "service" : "0x1234",
-            "instance" : "0x1234",
+            "instance" : "0x5678",
             "reliable": "30499"
         }
     ],

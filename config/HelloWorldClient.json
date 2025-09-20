@@ -19,15 +19,23 @@
     [
         {
             "name" : "client-sample",
-            "id" : "0x1212"
+            "id" : "0x1313"
         }
     ],
     "services" :
     [
         {
             "service" : "0x1234",
-            "instance" : "0x1234",
+            "instance" : "0x5678",
             "reliable": "30499"
+        }
+    ],    
+    "clients" :
+    [
+        {
+            "service" : "0x1234",
+            "instance" : "0x5678",
+            "reliable" : ["33333", "33334"]
         }
     ],
     "routing" : "client-sample",

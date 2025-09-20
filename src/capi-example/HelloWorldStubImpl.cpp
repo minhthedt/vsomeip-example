@@ -13,7 +13,14 @@ void HelloWorldStubImpl::sayHello(const std::shared_ptr<CommonAPI::ClientId> _cl
     std::stringstream messageStream;
 
     messageStream << "Hello " << _name << "!";
-    std::cout << "sayHello('" << _name << "'): '" << messageStream.str() << "'\n";
+    std::cout << "Server receive:" << _name  << "'\n";
 
-    _reply(messageStream.str());
+    //_reply(messageStream.str());
+    std::cout << "Server response:" << messageStream.str()  << "'\n";
+    try {
+        _reply(messageStream.str());
+    } catch (const std::exception& e) {
+        std::cerr << "Exception in sayHello: " << e.what() << std::endl;
+    }
+
 };
