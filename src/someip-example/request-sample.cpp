@@ -58,7 +58,13 @@ void run_sender() {
         req->set_instance(SAMPLE_INSTANCE_ID);
         req->set_method(SAMPLE_METHOD_ID);
         req->set_payload(payload);
-        req->set_reliable(true);
+        bool use_tcp = false;
+        req->set_reliable(use_tcp);
+		if (use_tcp) {
+			std::cout << "Client sending TCP..." << std::endl;
+		} else {
+			std::cout << "Client sending UDP..." << std::endl;
+		}
         try {
             app->send(req);
         } catch (const std::exception &e) {
@@ -83,6 +89,19 @@ void on_message(const std::shared_ptr<vsomeip::message> &_response) {
               << std::setw(4) << std::setfill('0') << std::hex << _response->get_client()
               << "/" << std::setw(4) << std::setfill('0') << std::hex << _response->get_session()
               << "] " << ss.str() << std::endl;
+}
+
+void on_state(vsomeip::state_type_e _state) {
+    std::cout << "Application " << app->get_name() << " is "
+        << (_state == vsomeip::state_type_e::ST_REGISTERED ?
+                "registered." : "deregistered.")
+        << std::endl;
+    if (_state == vsomeip::state_type_e::ST_REGISTERED) {
+        std::cout << "Application registered. request_service..." << std::endl;
+        app->request_service(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID);
+    } else {
+        std::cerr << "Application is NOT registered" << std::endl;
+    }
 }
 
 void on_availability(vsomeip::service_t /*_service*/, vsomeip::instance_t /*_instance*/, bool _is_available) {
@@ -112,9 +131,8 @@ int main() {
         std::cerr << "vsomeip init failed\n";
         return 1;
     }
-
+    app->register_state_handler(on_state);
     app->register_availability_handler(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID, on_availability);
-    app->request_service(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID);
     app->register_message_handler(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID, SAMPLE_METHOD_ID, on_message);
 
     std::thread sender(run_sender);

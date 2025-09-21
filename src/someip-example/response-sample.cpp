@@ -4,16 +4,41 @@
 
 #include <vsomeip/vsomeip.hpp>
 #include <dlt/dlt.h>
+#include <condition_variable>
+#include <thread>
  
 #define SAMPLE_SERVICE_ID 0x1234
 #define SAMPLE_INSTANCE_ID 0x5678
 #define SAMPLE_METHOD_ID 0x0421
+#define APPLICATION_NAME  "response-sample"
 
 // 🔹 Define DLT context
 DLT_DECLARE_CONTEXT(my_dlt_context);
 
 std::shared_ptr<vsomeip::application> app;
- 
+bool is_registered_ = false;
+std::mutex mutex_;
+std::condition_variable condition_;
+
+void on_state(vsomeip::state_type_e _state) {
+    std::cout << "Application " << app->get_name() << " is "
+            << (_state == vsomeip::state_type_e::ST_REGISTERED ?
+                    "registered." : "deregistered.")
+            << std::endl;
+    std::lock_guard<std::mutex> its_lock(mutex_);
+    if (_state == vsomeip::state_type_e::ST_REGISTERED) {
+        std::cout << "Application registered. Offering service..." << std::endl;
+         if (!is_registered_) {
+            is_registered_ = true;
+            condition_.notify_one();
+        }
+    } else { // vsomeip::state_type_e::ST_DEREGISTERED
+        std::cerr << "Application is NOT registered" << std::endl;
+        is_registered_ = false;
+    }
+
+}
+
 void on_message(const std::shared_ptr<vsomeip::message> &_request) {
  
     std::shared_ptr<vsomeip::payload> its_payload = _request->get_payload();
@@ -45,13 +70,28 @@ void on_message(const std::shared_ptr<vsomeip::message> &_request) {
     app->send(its_response);
 }
 
+void offer() {
+    std::unique_lock<std::mutex> its_lock(mutex_);
+    if (!is_registered_) {
+        condition_.wait(its_lock);
+    }
+
+    DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING("offer_service is called"));
+    std::cout << "offer_service is called" << std::endl;
+    app->offer_service(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID);
+}
+
 int main() {
     DLT_REGISTER_APP("APP2", "VSOMEIP Application");
     DLT_REGISTER_CONTEXT(my_dlt_context, "APP2", "VSOMEIP Service Context");
-
-   app = vsomeip::runtime::get()->create_application("response-sample");
-   app->init();
-   app->register_message_handler(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID, SAMPLE_METHOD_ID, on_message);
-   app->offer_service(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID);
-   app->start();
+    std::thread offer_thread(offer);
+    app = vsomeip::runtime::get()->create_application(APPLICATION_NAME);
+    if (!app->init()) {
+        std::cerr << "Couldn't initialize application" << std::endl;
+        return false;
+    }
+    app->register_state_handler(on_state);
+    app->register_message_handler(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID, SAMPLE_METHOD_ID, on_message);
+    app->start();
+   
 }
