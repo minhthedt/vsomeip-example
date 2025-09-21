@@ -1,8 +1,8 @@
 #!/bin/bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
-export VSOMEIP_APPLICATION_NAME=notify-sample
-export VSOMEIP_CONFIGURATION=$SCRIPT_DIR/../config/vsomeip_notifier.json
+export VSOMEIP_CONFIGURATION=$SCRIPT_DIR/../config/vsomeip_receiver_x.json
+export VSOMEIP_LOG=warn
 
 pushd "$SCRIPT_DIR"
 # Get start time
@@ -13,7 +13,7 @@ tcpdump -i eth0 -w "tcpdump_${START_TIME}_to_END.pcap" &
 TCPDUMP_PID=$!
 
 # Run your application
-./notify-sample
+ ./response-sample-x
 
 # After sender exits, get end time
 END_TIME=$(date +%Y%m%d_%H%M%S)

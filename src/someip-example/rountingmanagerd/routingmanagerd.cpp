@@ -20,7 +20,7 @@
 #include <dlt/dlt.h>
 #endif
 #endif
-
+#define APPLICATION_NAME  "routingmanagerd"
 static std::shared_ptr<vsomeip::application> its_application;
 
 #ifndef VSOMEIP_ENABLE_SIGNAL_HANDLING
@@ -81,7 +81,7 @@ int routingmanagerd_process(bool _is_quiet) {
     }
 
     // Create the application object
-    its_application = its_runtime->create_application("routingmanagerd");
+    its_application = its_runtime->create_application(APPLICATION_NAME);
 #ifndef VSOMEIP_ENABLE_SIGNAL_HANDLING
     std::thread sighandler_thread([]() {
         // Unblock signals for this thread only

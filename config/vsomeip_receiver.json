@@ -27,7 +27,7 @@
             "unreliable": "30510"
         }
     ],
-    "routing" : "response-sample",
+    "routing" : "routingmanagerd",
     "service-discovery" :
     {
         "enable" : "true",

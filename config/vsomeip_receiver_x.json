@@ -4,7 +4,7 @@
     {
         "level" : "debug",
         "console" : "true",
-        "file" : { "enable" : "true", "path" : "/var/log/vsomeip.log" },
+        "file" : { "enable" : "true", "path" : "/tmp/vsomeip.log" },
         "dlt" : "true"
     },
     "tracing" :
@@ -14,16 +14,17 @@
     "applications" :
     [
         {
-            "name" : "request-sample",
-            "id" : "0x1314"
+            "name" : "response-sample-x",
+            "id" : "0x1818"
         }
     ],
-    "clients" :
+    "services" :
     [
         {
-            "service" : "0x1234",
+            "service" : "0x8765",
             "instance" : "0x5678",
-            "reliable" : ["33333", "33334"]
+            "reliable": "30509",
+            "unreliable": "30510"
         }
     ],
     "routing" : "routingmanagerd",
