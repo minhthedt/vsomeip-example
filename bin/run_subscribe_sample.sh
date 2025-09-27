@@ -1,6 +1,7 @@
 #!/bin/bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+export VSOMEIP_APPLICATION_NAME=subscribe-sample
 export VSOMEIP_CONFIGURATION=$SCRIPT_DIR/../config/vsomeip_subscriber.json
 
 pushd "$SCRIPT_DIR"
