@@ -119,8 +119,8 @@ int main() {
     std::signal(SIGINT, handle_signal);
     std::signal(SIGTERM, handle_signal);
 
-    DLT_REGISTER_APP("APP1", "VSOMEIP Application");
-    DLT_REGISTER_CONTEXT(my_dlt_context, "APP1", "VSOMEIP Service Context");
+    DLT_REGISTER_APP("REQUEST", "VSOMEIP Application");
+    DLT_REGISTER_CONTEXT(my_dlt_context, "REQUEST", "VSOMEIP Service Context");
 
     app = vsomeip::runtime::get()->create_application("request-sample");
     if (!app) {

@@ -82,8 +82,8 @@ void offer() {
 }
 
 int main() {
-    DLT_REGISTER_APP("APP2", "VSOMEIP Application");
-    DLT_REGISTER_CONTEXT(my_dlt_context, "APP2", "VSOMEIP Service Context");
+    DLT_REGISTER_APP("RESPONSE", "VSOMEIP Application");
+    DLT_REGISTER_CONTEXT(my_dlt_context, "RESPONSE", "VSOMEIP Service Context");
     std::thread offer_thread(offer);
     app = vsomeip::runtime::get()->create_application(APPLICATION_NAME);
     if (!app->init()) {

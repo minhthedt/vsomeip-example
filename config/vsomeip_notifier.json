@@ -27,14 +27,22 @@
                 {
                     "event" : "0x8778",
                     "is_field" : "true",
-                    "update-cycle" : 2000
+                    "cycle" : 2000,
+                    "is_reliable" : "true"
+                },
+                {
+                    "event" : "0x8779",
+                    "is_field" : "false",
+                    "cycle" : 2000,
+                    "is_reliable" : "true"
                 }
             ],
             "eventgroups" :
             [
                 {
                     "eventgroup" : "0x4465",
-                    "events" : [ "0x8778" ]
+                    "multicast" : {"address" : "239.192.255.251", "port" : "30506" },
+                    "events" : [ "0x8779" ]
                 }
             ]
         }

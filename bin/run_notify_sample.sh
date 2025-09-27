@@ -14,7 +14,6 @@ TCPDUMP_PID=$!
 
 # Run your application
 ./notify-sample
-
 # After sender exits, get end time
 END_TIME=$(date +%Y%m%d_%H%M%S)
 

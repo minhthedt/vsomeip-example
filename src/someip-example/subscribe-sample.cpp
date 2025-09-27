@@ -13,9 +13,9 @@
 #include <thread>
 
 #include <vsomeip/vsomeip.hpp>
-
+#include <dlt/dlt.h>
 #include "sample-ids.hpp"
-
+DLT_DECLARE_CONTEXT(my_dlt_context);
 class client_sample {
 public:
     client_sample(bool _use_tcp) :
@@ -79,16 +79,28 @@ public:
     }
 
     void on_availability(vsomeip::service_t _service, vsomeip::instance_t _instance, bool _is_available) {
-        std::cout << "Service ["
+        std::stringstream ss;
+        ss << "Service ["
                 << std::hex << std::setfill('0') << std::setw(4) << _service << "." << _instance
                 << "] is "
-                << (_is_available ? "available." : "NOT available.")
-                << std::endl;
+                << (_is_available ? "available." : "NOT available.");
+        std::cout << ss.str() << std::endl;
+        DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING(ss.str().c_str()));
     }
 
     void on_message(const std::shared_ptr<vsomeip::message> &_response) {
+        std::string _type = "";
+        if (_response->get_service() == SAMPLE_SERVICE_ID) {
+            if(_response->get_method() == SAMPLE_GET_METHOD_ID) {
+                _type = "GET-RESPONSE: ";
+            } else if (_response->get_method() == SAMPLE_SET_METHOD_ID) {
+                _type = "SET-RESPONSE: ";
+            } else if (_response->get_method() == SAMPLE_EVENT_ID) {
+                _type = "ON_NOTIFY: ";
+            }
+        }
         std::stringstream its_message;
-        its_message << (_response->is_reliable() ? "TCP: " : "UDP: ")
+        its_message  << (_response->is_reliable() ? "TCP: " : "UDP: ") << _type
                 << "Received a notification for Event ["
                 << std::hex << std::setfill('0')
                 << std::setw(4) << _response->get_service() << "."
@@ -104,6 +116,7 @@ public:
         for (uint32_t i = 0; i < its_payload->get_length(); ++i)
             its_message << std::setw(2) << static_cast<int>(its_payload->get_data()[i]) << " ";
         std::cout << its_message.str() << std::endl;
+        DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING(its_message.str().c_str()));
 
         if (_response->get_client() == 0) {
             if ((its_payload->get_length() % 5) == 0) {
@@ -113,6 +126,10 @@ public:
                 its_get->set_instance(SAMPLE_INSTANCE_ID);
                 its_get->set_method(SAMPLE_GET_METHOD_ID);
                 its_get->set_reliable(use_tcp_);
+                std::stringstream ss;
+                ss  <<  (use_tcp_ ? "TCP " : "UDP ") << "GET-REQUEST-----------";
+                std::cout << ss.str() << std::endl;
+                DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING(ss.str().c_str()));
                 app_->send(its_get);
             }
 
@@ -125,12 +142,17 @@ public:
                 its_set->set_reliable(use_tcp_);
 
                 const vsomeip::byte_t its_data[]
-                    = { 0x42, 0x43, 0x44, 0x45, 0x46, 0x47,
-                        0x48, 0x49, 0x50, 0x51, 0x52 };
+                    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                        0x00, 0x00, 0x00, 0x00, 0x00 };
                 std::shared_ptr<vsomeip::payload> its_set_payload
                     = vsomeip::runtime::get()->create_payload();
                 its_set_payload->set_data(its_data, sizeof(its_data));
                 its_set->set_payload(its_set_payload);
+
+                std::stringstream ss;
+                ss  <<  (use_tcp_ ? "TCP " : "UDP ") << "SET-REQUEST 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00";
+                std::cout << ss.str() << std::endl;
+                DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING(ss.str().c_str()));
                 app_->send(its_set);
             }
         }
@@ -151,6 +173,8 @@ private:
 #endif
 
 int main(int argc, char **argv) {
+    DLT_REGISTER_APP("SUBSCRIBER", "VSOMEIP Application");
+    DLT_REGISTER_CONTEXT(my_dlt_context, "SUBSCRIBER", "VSOMEIP Service Context");
     bool use_tcp = false;
 
     std::string tcp_enable("--tcp");
@@ -177,6 +201,10 @@ int main(int argc, char **argv) {
 #ifdef VSOMEIP_ENABLE_SIGNAL_HANDLING
         its_sample.stop();
 #endif
+
+    // cleanup DLT
+    DLT_UNREGISTER_CONTEXT(my_dlt_context);
+    DLT_UNREGISTER_APP();
         return 0;
     } else {
         return 1;
