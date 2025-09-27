@@ -23,20 +23,16 @@ This project includes the following roles:
 sudo apt update
 sudo apt install -y openssh-server screen git
 sudo apt install -y net-tools netcat socat tcpdump
-sudo apt install dlt-daemon libdlt-dev dlt-tools
 
 # Download example and install Cmake, boost, dlt, vsomeip
 git clone https://github.com/minhthedt/vsomeip-example.git
+cd vsomeip-example
 sudo ./set_env.sh 2>&1 | tee log.txt
 ```
 #### Build vsomeip-example
 ```bash
 cd vsomeip-example
-mkdir build
-cd build
-cmake ..
-make -j"$(nproc)"
-make install
+sudo ./build.sh
 ```
 #### <h4 style="color:#0074D9">Verify Multicast (make sure 2 PC can send/receive multicast)</h4>
 ```
@@ -54,14 +50,26 @@ make install
 
 ## 📝 Design Overview
 
-#### 1) Server init
-![OverView](doc/design/OverView.svg)
+#### 0) SOME/IP-SD
+![SOME/IP-SD](doc/design/OverView.svg)
 
-#### 2) OfferService Repetition Pattern
+#### 1.0) request-sample
+![1.0_request-sample](doc/design/1.0_request-sample.svg)
+
+#### 1.1) response-sample
+![1.1_response-sample](doc/design/1.1_response-sample.svg)
+
+#### 2.0) subscribe-sample
+![2.0_subscribe-sample](doc/design/2.0_subscribe-sample.svg)
+
+#### 2.1) notify-sample
+![2.1_notify-sample](doc/design/2.1_notify-sample.svg)
+
+#### 3.0) OfferService Repetition Pattern
 ![OfferService_Repetition](doc/picture/OfferService_Repetition_Pattern.png)
 
-#### 3) someip_udp_packet(offerservice)
+#### 3.1) someip_udp_packet(offerservice)
 ![OfferService_Repetition](doc/picture/someip_udp_packet(offerservice).png)
 
-#### 4) someip_tcp_packet(request_response)
+#### 3.2) someip_tcp_packet(request_response)
 ![OfferService_Repetition](doc/picture/someip_tcp_packet(request_response).png)

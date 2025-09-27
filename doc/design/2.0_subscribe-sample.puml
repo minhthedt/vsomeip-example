@@ -1,0 +1,43 @@
+@startuml
+autonumber
+!pragma teoz true
+
+box "PC1 (192.168.1.5)" #LightBlue
+  box "subscribe-sample"
+    participant "sample.cpp" as sender
+    participant "vsomeip::application" as app
+  end box
+  participant "routingmanager" as routmgr
+end box
+
+sender->app **:  vomeip::runtime::get()->create_application(VSOMEIP_APPLICATION_NAME)
+sender->app: init()
+app->app: loadConfig(VSOMEIP_CONFIGURATION)
+sender->app: register_state_handler(on_state)
+app->routmgr: VSOMEIP_REGISTER_APPLICATION (0x02)
+sender->app: register_availability_handler(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID, on_availability)
+sender->app: register_message_handler(vsomeip::ANY_SERVICE, SAMPLE_INSTANCE_ID, vsomeip::ANY_METHOD, on_message)
+
+sender->app: **<color blue>request_event</color>**(SAMPLE_SERVICE_ID,SAMPLE_INSTANCE_ID, **<color blue>SAMPLE_EVENT_ID, event_groups</color>**, \n vsomeip::event_type_e::ET_FIELD);
+sender->app: **<color blue>subscribe</color>**(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID, **<color blue>SAMPLE_EVENTGROUP_ID</color>**)
+
+sender->app: start()
+return true
+routmgr->app: VSOMEIP_REGISTERED_ACK (0x06)
+app->sender: on_state(vsomeip::state_type_e _state)
+opt _state = vsomeip::state_type_e::ST_REGISTERED
+sender->app: request_service(SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID)
+app->routmgr: FIND_SERVICE(...)
+end
+
+routmgr->app: ON_OFFER_SERVICE(...)
+app->sender: on_availability(vsomeip::service_t , vsomeip::instance_t , bool _is_available)
+sender->sender: _is_available = true
+
+===receive event notification==
+app->sender: on_message(const std::shared_ptr<vsomeip::message> &_response)
+
+===send request and receive response==
+sender->app: **<color blue>send</color>**(request{SAMPLE_SERVICE_ID, SAMPLE_INSTANCE_ID, SAMPLE_METHOD_ID, reliable, payload})
+app->sender: on_message(const std::shared_ptr<vsomeip::message> &_response)
+@endtuml

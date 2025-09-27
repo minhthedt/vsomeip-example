@@ -62,10 +62,16 @@ public:
                 SAMPLE_INSTANCE_ID,
                 SAMPLE_EVENT_ID,
                 its_groups,
-                vsomeip::event_type_e::ET_FIELD, std::chrono::milliseconds::zero(),
-                false, // is_reliable = TCP: true. UDP: false
-                true,  //is_multicast = true
-                nullptr, vsomeip::reliability_type_e::RT_UNRELIABLE );
+                vsomeip::event_type_e::ET_FIELD, 
+                //  * \param _type Type of the offered entity:
+                //- ET_EVENT: broadcast notification without selector.
+                //- ET_SELECTIVE_EVENT: only delivered to subscribers matching a selector.
+                //- ET_FIELD: value with getter/setter and change notifications.
+                std::chrono::milliseconds::zero(), //no periodic sending.
+                false, // _change_resets_cycle If true, a payload change resets the cycle timer for periodic events.
+                true,  // _update_on_change If true, a change in payload immediately triggers a notification.
+                nullptr, // _epsilon_change_func Custom comparator function to decide whether two payloadsare considered different (used for change detection).
+                vsomeip::reliability_type_e::RT_UNRELIABLE );  // send over UDP only.
         {
             std::lock_guard<std::mutex> its_lock(payload_mutex_);
             payload_ = vsomeip::runtime::get()->create_payload();

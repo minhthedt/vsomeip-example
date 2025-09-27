@@ -24,13 +24,13 @@ jobs:
           distribution: 'temurin'
 
       - name: Install PlantUML
-        run: sudo apt-get update && sudo apt-get install -y plantuml
+        run: sudo curl -L -o plantuml.jar https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar
 
       - name: Render all .puml files to .svg
         run: |
           find . -type f -name '*.puml' | while read file; do
             echo "Rendering $file..."
-            plantuml -tsvg "$file"
+            java -jar plantuml.jar -tsvg "$file"
           done
 
       - name: Show current branch and user
