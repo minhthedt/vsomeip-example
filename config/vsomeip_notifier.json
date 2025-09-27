@@ -22,11 +22,6 @@
             "instance" : "0x5678",
             "unreliable" : "30509",
             "reliable" : "30515",
-            "multicast" :
-            {
-                "address" : "224.244.224.233",
-                "port" : "32344"
-            },
             "events" :
             [
                 {
@@ -39,8 +34,7 @@
             [
                 {
                     "eventgroup" : "0x4465",
-                    "events" : [ "0x8778" ],
-                    "is_multicast" : "true"
+                    "events" : [ "0x8778" ]
                 }
             ]
         }

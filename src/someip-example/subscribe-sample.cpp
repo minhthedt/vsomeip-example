@@ -88,7 +88,8 @@ public:
 
     void on_message(const std::shared_ptr<vsomeip::message> &_response) {
         std::stringstream its_message;
-        its_message << "Received a notification for Event ["
+        its_message << (_response->is_reliable() ? "TCP: " : "UDP: ")
+                << "Received a notification for Event ["
                 << std::hex << std::setfill('0')
                 << std::setw(4) << _response->get_service() << "."
                 << std::setw(4) << _response->get_instance() << "."

@@ -71,7 +71,7 @@ public:
                 false, // _change_resets_cycle If true, a payload change resets the cycle timer for periodic events.
                 true,  // _update_on_change If true, a change in payload immediately triggers a notification.
                 nullptr, // _epsilon_change_func Custom comparator function to decide whether two payloadsare considered different (used for change detection).
-                vsomeip::reliability_type_e::RT_UNRELIABLE );  // send over UDP only.
+                vsomeip::reliability_type_e::RT_RELIABLE );  // send over UDP only.
         {
             std::lock_guard<std::mutex> its_lock(payload_mutex_);
             payload_ = vsomeip::runtime::get()->create_payload();

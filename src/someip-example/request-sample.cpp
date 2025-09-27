@@ -85,7 +85,8 @@ void on_message(const std::shared_ptr<vsomeip::message> &_response) {
     }
 
     DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING("Received message: "), DLT_STRING(ss.str().c_str()));
-    std::cout << "CLIENT: Received message Client/Session ["
+    std::cout << (_response->is_reliable() ? "TCP: " : "UDP: ")
+              << "CLIENT: Received message Client/Session ["
               << std::setw(4) << std::setfill('0') << std::hex << _response->get_client()
               << "/" << std::setw(4) << std::setfill('0') << std::hex << _response->get_session()
               << "] " << ss.str() << std::endl;

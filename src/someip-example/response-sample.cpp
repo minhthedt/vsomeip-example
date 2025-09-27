@@ -50,8 +50,8 @@ void on_message(const std::shared_ptr<vsomeip::message> &_request) {
        ss << std::setw(2) << std::setfill('0') << std::hex
           << (int)*(its_payload->get_data()+i) << " ";
     }
- 
-    std::cout << "SERVICE: Received message with Client/Session ["
+    std::cout << (_request->is_reliable() ? "TCP: " : "UDP: ")
+        << "SERVICE: Received message with Client/Session ["
         << std::setw(4) << std::setfill('0') << std::hex << _request->get_client() << "/"
         << std::setw(4) << std::setfill('0') << std::hex << _request->get_session() << "] "
         << ss.str() << std::endl;
