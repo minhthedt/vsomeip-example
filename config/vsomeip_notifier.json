@@ -13,6 +13,10 @@
         {
             "name" : "notify-sample",
             "id" : "0x1277"
+        },
+        {
+            "name" : "routingmanagerd",
+            "id" : "0x0001"
         }
     ],
     "services" :
@@ -28,7 +32,7 @@
                     "event" : "0x8778",
                     "is_field" : "true",
                     "cycle" : 2000,
-                    "is_reliable" : "true"
+                    "is_reliable" : "false"
                 },
                 {
                     "event" : "0x8779",
@@ -41,8 +45,9 @@
             [
                 {
                     "eventgroup" : "0x4465",
-                    "multicast" : {"address" : "239.192.255.251", "port" : "30506" },
-                    "events" : [ "0x8779" ]
+                    "multicast" : {"address" : "224.244.224.246", "port" : "30506" },
+                    "events" : [ "0x8778" ],
+                    "threshold" : "1"
                 }
             ]
         }

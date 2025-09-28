@@ -67,11 +67,12 @@ public:
                 //- ET_EVENT: broadcast notification without selector.
                 //- ET_SELECTIVE_EVENT: only delivered to subscribers matching a selector.
                 //- ET_FIELD: value with getter/setter and change notifications.
-                std::chrono::milliseconds::zero(), //no periodic sending.
+                std::chrono::milliseconds::zero(), //no periodic sending, config can override
+                //std::chrono::milliseconds(5000), // periodic sending, config can not override
                 false, // _change_resets_cycle If true, a payload change resets the cycle timer for periodic events.
                 true,  // _update_on_change If true, a change in payload immediately triggers a notification.
                 nullptr, // _epsilon_change_func Custom comparator function to decide whether two payloadsare considered different (used for change detection).
-                vsomeip::reliability_type_e::RT_RELIABLE );  // send over UDP only.
+                vsomeip::reliability_type_e::RT_UNRELIABLE );  // send over UDP only.
         {
             std::lock_guard<std::mutex> its_lock(payload_mutex_);
             payload_ = vsomeip::runtime::get()->create_payload();
@@ -178,7 +179,7 @@ public:
                 stop_offer();
 
             for (int i = 0; i < 10 && running_; i++)
-                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                std::this_thread::sleep_for(std::chrono::milliseconds(100000));
 
             is_offer = !is_offer;
         }
@@ -210,7 +211,8 @@ public:
 
                 its_size++;
 
-                std::this_thread::sleep_for(std::chrono::milliseconds(cycle_));
+                //std::this_thread::sleep_for(std::chrono::milliseconds(cycle_));
+                return; // vvthe: i want to test vsomeip notify periodically
             }
         }
     }
