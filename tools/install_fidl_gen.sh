@@ -11,7 +11,7 @@ if [ ! -d "download" ]; then
     sudo mkdir download
 fi
 cd download
-
+#IMPORTANT: version must be compatible with capicxx-core-runtime, capicxx-someip-runtime
 install_commonapi_core_generator() {
     if [ -d "commonapi_core_generator" ]; then
         sudo rm -rf commonapi_core_generator
@@ -21,7 +21,7 @@ install_commonapi_core_generator() {
     else
         echo "commonapi_core_generator.zip not found, downloading..."
     fi
-    sudo wget https://github.com/GENIVI/capicxx-core-tools/releases/download/3.2.14/commonapi_core_generator.zip
+    sudo wget https://github.com/GENIVI/capicxx-core-tools/releases/download/3.2.0.1/commonapi_core_generator.zip
     sudo unzip commonapi_core_generator.zip -d commonapi_core_generator/
 }
 
@@ -34,7 +34,7 @@ install_commonapi_someip_generator() {
     else
         echo "commonapi_someip_generator.zip not found, downloading..."
     fi
-    sudo wget https://github.com/GENIVI/capicxx-someip-tools/releases/download/3.2.14/commonapi_someip_generator.zip
+    sudo wget https://github.com/GENIVI/capicxx-someip-tools/releases/download/3.2.0.1/commonapi_someip_generator.zip
     sudo unzip commonapi_someip_generator.zip -d commonapi_someip_generator/
 }
 

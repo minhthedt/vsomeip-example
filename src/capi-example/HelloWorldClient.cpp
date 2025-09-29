@@ -31,6 +31,11 @@ int main() {
         std::this_thread::sleep_for(std::chrono::microseconds(10));
     std::cout << "Available..." << std::endl;
 
+    // Subscribe to broadcast
+    myProxy->getMyStatusEvent().subscribe([&](const int32_t& val) {
+        std::cout << "-------------------Received Notification MyStatus = " << val << std::endl;
+    });
+
     const std::string name = "World";
     CommonAPI::CallStatus callStatus;
     std::string returnMessage;

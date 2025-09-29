@@ -29,9 +29,11 @@ int main() {
 
     std::cout << "Successfully Registered Service!" << std::endl;
 
+    int32_t myStatus = 0;
     while (true) {
-        std::cout << "Waiting for calls... (Abort with CTRL+C)" << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(60));
+        std::cout << "fireMyStatusEvent" << std::endl;
+        myService->fireMyStatusEvent(myStatus++); // broadcast
+        std::this_thread::sleep_for(std::chrono::seconds(5));
     }
 
     return 0;

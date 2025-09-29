@@ -14,6 +14,15 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.examples.H
             }
         }
     }
+
+    broadcast myStatus {
+        SomeIpEventID = 0x8778        
+        SomeIpEventGroups = { 0x4465 }
+
+        out {
+        }
+    }
+    
 }
 
 define org.genivi.commonapi.someip.deployment for provider as Service {

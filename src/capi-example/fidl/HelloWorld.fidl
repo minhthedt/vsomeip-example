@@ -11,4 +11,11 @@ interface HelloWorld {
             String message
         }
     }
+
+    broadcast myStatus {
+        out {
+            Int32 myCurrentValue
+        }
+    }
+
 }

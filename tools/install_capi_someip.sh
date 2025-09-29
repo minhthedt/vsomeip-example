@@ -13,7 +13,12 @@ if [ ! -d "download" ]; then
 fi
 cd download
 
-
+#Clean all exist lib
+sudo rm -f /usr/local/lib/libCommonAPI*
+sudo rm -rf /usr/local/lib/cmake/CommonAPI*
+sudo ldconfig
+#ldd ./bin/HelloWorldService | grep CommonAPI
+#ldd ./bin/libHelloWorld-someip.so | grep CommonAPI
 install_capicxx_core() {
     if [ -d "capicxx-core-runtime" ]; then
         sudo rm -rf capicxx-core-runtime
@@ -34,7 +39,7 @@ install_capicxx_someip() {
         sudo rm -rf capicxx-someip-runtime
     fi
     #3.2.4 version is compatible gcc 7.5 on ubuntu 18
-    sudo git clone --branch 3.2.4  https://github.com/COVESA/capicxx-someip-runtime.git
+    sudo git clone --branch 3.2.0  https://github.com/COVESA/capicxx-someip-runtime.git
     pushd capicxx-someip-runtime
     sudo mkdir build
     cd build
