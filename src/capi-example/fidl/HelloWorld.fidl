@@ -18,4 +18,21 @@ interface HelloWorld {
         }
     }
 
+    attribute CommonTypes.StudentStruct studentData
+
+}
+
+typeCollection CommonTypes {
+    version { major 1 minor 0 }
+    
+    struct StudentStruct {
+        String name
+        ProfileStruct profile
+    }
+
+    struct ProfileStruct {
+        Int32 age
+        Boolean gender
+        Double score
+    }
 }

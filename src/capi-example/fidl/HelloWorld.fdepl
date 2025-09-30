@@ -23,7 +23,25 @@ define org.genivi.commonapi.someip.deployment for interface commonapi.examples.H
         }
     }
     
+    attribute studentData {
+        SomeIpGetterID = 0x7534
+        SomeIpSetterID = 0x7535
+        SomeIpNotifierID = 0x8779
+        SomeIpNotifierEventGroups = { 0x8779 }
+
+        SomeIpAttributeReliable = false
+    }
 }
+
+define org.genivi.commonapi.someip.deployment for typeCollection commonapi.examples.CommonTypes {
+    struct StudentStruct {
+    }
+
+    struct ProfileStruct {
+    }
+
+}
+
 
 define org.genivi.commonapi.someip.deployment for provider as Service {
     instance commonapi.examples.HelloWorld {

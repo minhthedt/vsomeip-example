@@ -65,7 +65,8 @@ execute_process(
 
 message(STATUS "Script output: ${output}")
 message(STATUS "Script error: ${error}")
-
+message(STATUS "DL_LIBRARY: ${DL_LIBRARY}")
+message(STATUS "DLT_LIBRARIES: ${DLT_LIBRARIES}")
 # CommonAPI
 include(FindPkgConfig)
 
@@ -141,7 +142,7 @@ endif()
 
 # Build Client
 add_executable(${PRJ_NAME_CLIENT} ${PRJ_CLIENT_SRCS})
-target_link_libraries(${PRJ_NAME_CLIENT} ${LINK_LIBRARIES})
+target_link_libraries(${PRJ_NAME_CLIENT} ${LINK_LIBRARIES} ${DLT_LIBRARIES} ${DL_LIBRARY})
 
 # Install the binary to a subdirectory of the parent directory
 install(TARGETS ${PRJ_NAME_CLIENT} 
@@ -149,7 +150,7 @@ install(TARGETS ${PRJ_NAME_CLIENT}
 
 # Build service
 add_executable(${PRJ_NAME_SERVICE} ${PRJ_SERVICE_SRCS})
-target_link_libraries(${PRJ_NAME_SERVICE} ${LINK_LIBRARIES})
+target_link_libraries(${PRJ_NAME_SERVICE} ${LINK_LIBRARIES}  ${DLT_LIBRARIES} ${DL_LIBRARY})
 
 # Install the binary to a subdirectory of the parent directory
 install(TARGETS ${PRJ_NAME_SERVICE} 

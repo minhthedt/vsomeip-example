@@ -22,7 +22,7 @@
             "id" : "0x1313"
         }
     ],
-    "services" :
+     "services" :
     [
         {
             "service" : "0x1234",
@@ -36,6 +36,12 @@
                     "is_field" : "true",
                     "cycle" : 2000,
                     "is_reliable" : "false"
+                },
+                {
+                    "event" : "0x8779",
+                    "is_field" : "true",
+                    "cycle" : 0,
+                    "is_reliable" : "false"
                 }
             ],
             "eventgroups" :
@@ -45,10 +51,16 @@
                     "multicast" : {"address" : "224.244.224.246", "port" : "30506" },
                     "events" : [ "0x8778" ],
                     "threshold" : "1"
+                },
+                {
+                    "eventgroup" : "0x8779",
+                    "multicast" : {"address" : "224.244.224.246", "port" : "30507" },
+                    "events" : [ "0x8779" ],
+                    "threshold" : "1"
                 }
             ]
         }
-    ], 
+    ],
     "clients" :
     [
         {
