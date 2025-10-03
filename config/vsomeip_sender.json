@@ -1,5 +1,5 @@
 {
-    "unicast" : "172.17.0.5",
+    "unicast" : "172.17.0.6",
     "logging" :
     {
         "level" : "debug",
@@ -26,7 +26,7 @@
             "reliable" : ["33333", "33334"]
         }
     ],
-    "routing" : "routingmanagerd",
+    "routing" : "request-sample",
     "service-discovery" :
     {
         "enable" : "true",
