@@ -1,0 +1,28 @@
+@startuml
+autonumber
+box "Device1(192.168.1.3)" 
+participant "clientA(App1)" as clientA
+participant "routingmanagerd" as rout1
+end box
+
+
+box "Device2(192.168.1.4)" 
+participant "routingmanagerd" as rout2
+participant "ServiceA(App3)" as ServiceA
+end box
+
+
+
+ref over clientA, ServiceA
+FIND/OFFER service
+end ref
+opt serviceAstatus = available
+clientA->rout1: send(reliable, message)
+note right rout1
+(reliable = true)  => TCP: send to 192.168.1.4:30500
+(reliable = false) => UDP: send to 192.168.1.4:30501
+end note
+rout1->rout2: (SOMEIP) REQUEST Message
+rout2->ServiceA: onMessage(...)
+end
+@enduml
