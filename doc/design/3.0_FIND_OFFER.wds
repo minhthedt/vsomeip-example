@@ -19,13 +19,18 @@ rout2->rout1: (SOMEIP/SD) OFFER Message
 end
 note right rout1
 src: 192.168.1.4:30490
-dst: 239.1.1.1:30490 **<color blue>(mutilcast address)</color>**
-
-OFFER Message {
+dst: 224.224.224.245:30490 **<color blue>(mutilcast address)</color>**
+header {
+    Service ID: 0xffff
+    Method ID: 0x8100
+    ...
+}
+payload {
+    **<color blue>Type: 0x01 (offer service)</color>**
     serviceId: 0x1234
     instanceId: 0x5678
     ...
-    ServiceA connection / EndPoint {
+    ServiceA EndPoint {
         ip: 192.168.1.4
         tcp port: 30500
         udp port: 30501

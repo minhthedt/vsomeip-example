@@ -211,8 +211,8 @@ public:
 
                 its_size++;
 
-                //std::this_thread::sleep_for(std::chrono::milliseconds(cycle_));
-                return; // vvthe: i want to test vsomeip notify periodically
+                std::this_thread::sleep_for(std::chrono::milliseconds(cycle_));
+                //return; // vvthe: i want to test vsomeip notify periodically
             }
         }
     }
