@@ -12,30 +12,39 @@ participant "ServiceA(App3)" as ServiceA
 end box
 
 
-
+ServiceA->rout2: offer_event(serviceId, instanceId, **event_Id, event_group_ids**)
+clientA->rout1: request_event(serviceId, instanceId, **event_Id, event_group_ids**)
+clientA->rout1: subscribe(serviceId, instanceId, **event_group_ids**)
 ref over clientA, ServiceA
 FIND/OFFER service
 end ref
-opt serviceAstatus = available
-clientA->rout1: send(reliable, message)
+loop 1000ms (configable "cyclic_offer_delay")
+rout2->rout1: (SOMEIP/SD) OFFER Message
 note right rout1
+src: 192.168.1.3:30490
+dst: 192.168.1.4:30490 **<color green>(unicast address)</color>**
 header {
-    Service ID: 0x1234
-    **<color blue>Method ID: 0x0421</color>**
-    Length: 18
-    Client ID: 0x1314
-    **<color blue>Session ID: 0x0001</color>**
-    SOME/IP Version: 0x01
-    Interface Version: 0x00
-    **<color blue>Message Type: 0x00 (Request)</color>**
-    **<color blue>Return Code: 0x00 (Ok)</color>**
+    Service ID: 0xffff
+    Method ID: 0x8100
+    ...
 }
-Payload: 00010203040506070809
+payload {
+    **<color blue>Type: 0x06 (subscribe eventgroup)</color>**
+    serviceId: 0x1234
+    instanceId: 0x5678
+    ...
+    ClientA EndPoint {
+        ip: 192.168.1.3
+        udp port: xxxx
+        ...
+    }
+}
 end note
-rout1->rout2: (SOMEIP) REQUEST Message
-rout2->ServiceA: onMessage(...)
-ServiceA->rout2: send(response)
-rout2->rout1: (SOMEIP) RESPONSE Message
-rout1->clientA: onMessage(...)
+rout1->rout2: (SOMEIP/SD) SUBSCRIBE Message
+rout2->rout1: (SOMEIP/SD) SUBSCRIBE_ACK Message
 end
+
+ServiceA->rout2: notify(serviceId, instanceId, **event_id**, payload)
+rout2->rout1: (SOME/IP) NOTFICATION Message
+rout1->clientA: onMessage(...)
 @enduml

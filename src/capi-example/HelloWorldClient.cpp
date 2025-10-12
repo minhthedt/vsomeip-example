@@ -24,8 +24,12 @@ std::string toString(const v1::commonapi::examples::CommonTypes::StudentStruct& 
     return ss.str();
 }
 
-void recv_cb(const CommonAPI::CallStatus& callStatus, const std::string& out) {
-    std::cout << "---------Receive callback: " << out.c_str() << std::endl;
+void sayHello_cb(const CommonAPI::CallStatus& callStatus, const std::string& out) {
+    std::cout << "---------sayHello callback: " << out.c_str() << std::endl;
+}
+
+void setValue_cb(const CommonAPI::CallStatus& callStatus) {
+    std::cout << "---------setValue callback" << std::endl;
 }
 
 int main() {
@@ -67,18 +71,32 @@ int main() {
     CommonAPI::CallInfo info(1000);
     info.sender_ = 1234;
 
-    std::function<void((const CommonAPI::CallStatus&, const std::string&))> fcb = recv_cb;
+    //std::function<void((const CommonAPI::CallStatus&, const std::string&))> sayHello_cb = recv_cb;
     while (true) {
-        //myProxy->sayHello(name, callStatus, returnMessage, &info);
-        //if (callStatus != CommonAPI::CallStatus::SUCCESS) {
-        //    std::cerr << "Remote call failed!\n";
-        //    return -1;
-        //}
-        myProxy->sayHelloAsync(name, fcb, &info);
+
+        //[ASYNC]fire&forget
+        myProxy->setValue(255, callStatus, &info);
+        //myProxy->setValueAsync(255, setValue_cb, &info);
+        
+        if (callStatus != CommonAPI::CallStatus::SUCCESS) {
+            printf("ERROR:setValue(255) callStatus=%d\n", static_cast<int>(callStatus));
+        }
+
+        //[SYNC] request&response
+        int32_t sum = 0;
+        myProxy->calculateSum(3, 4, callStatus, sum, &info);
+        if (callStatus != CommonAPI::CallStatus::SUCCESS) {
+            std::cerr << "Remote call failed!\n";
+            return -1;
+        }
+        std::cout << "calculateSum(3, 4) = " << sum << "'\n";
+
+        //[ASYNC] request&response
+        myProxy->sayHelloAsync(name, sayHello_cb, &info);
 
         info.timeout_ = info.timeout_ + 1000;
 
-        std::cout << "Got message: '" << returnMessage << "'\n";
+
 
 
         //get attribute

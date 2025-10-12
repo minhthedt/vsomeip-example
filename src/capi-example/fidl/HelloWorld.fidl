@@ -3,6 +3,24 @@ package commonapi.examples
 interface HelloWorld {
     version { major 0 minor 1 }
 
+    // fire&forget
+    method setValue {
+        in {
+            Int32 x
+        }
+    }
+
+    // request/response
+    method calculateSum {
+        in {
+            Int32 a
+            Int32 b
+        }
+        out {
+            Int32 c
+        }
+    }
+    // request/response
     method sayHello {
         in {
             String name
@@ -12,12 +30,14 @@ interface HelloWorld {
         }
     }
 
+    // Events: notify
     broadcast myStatus {
         out {
             Int32 myCurrentValue
         }
     }
 
+    // Field: get/set/notify
     attribute CommonTypes.StudentStruct studentData
 
 }

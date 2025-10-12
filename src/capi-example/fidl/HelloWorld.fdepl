@@ -4,6 +4,16 @@ import "HelloWorld.fidl"
 define org.genivi.commonapi.someip.deployment for interface commonapi.examples.HelloWorld {
     SomeIpServiceID = 0x1234
 
+    method setValue {
+        SomeIpMethodID = 0x7533
+        SomeIpReliable = false
+    }
+
+    method calculateSum {
+        SomeIpMethodID = 0x7532
+        SomeIpReliable = true
+    }
+
     method sayHello {
         SomeIpMethodID = 0x7531
         SomeIpReliable = true
