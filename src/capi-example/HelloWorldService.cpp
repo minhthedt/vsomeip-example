@@ -30,32 +30,35 @@ int main() {
     std::string instance = "commonapi.examples.HelloWorld";
     std::string connection = "service-sample";
 
+    // register service to someipsd
     std::shared_ptr<HelloWorldStubImpl> myService = std::make_shared<HelloWorldStubImpl>();
     bool successfullyRegistered = runtime->registerService(domain, instance, myService, connection);
-
     while (!successfullyRegistered) {
         std::cout << "Register Service failed, trying again in 100 milliseconds..." << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
         successfullyRegistered = runtime->registerService(domain, instance, myService, connection);
     }
-
     std::cout << "Successfully Registered Service!" << std::endl;
 
     int32_t myStatus = 0;
     ::v1::commonapi::examples::CommonTypes::StudentStruct data;
     data.setName("Alice");
     data.setProfile(::v1::commonapi::examples::CommonTypes::ProfileStruct(myStatus, true, 9.5f));
-    printf("++++++++++setStudentDataAttribute(...)\n");
-    DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING("++++++++++setStudentDataAttribute:"), DLT_STRING(toString(data).c_str()));
-    myService->setStudentDataAttribute(data);
+    
     int count = 0;
     while (true) {
-        printf("++++++++++fireMyStatusEvent(%d)\n", myStatus);
-        DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING("++++++++++fireMyStatusEvent: "), DLT_INT(myStatus));
+        printf("++++++++++fireMyStatusEvent: myStatus = %d\n", myStatus);
+        DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING("++++++++++fireMyStatusEvent: myStatus = "), DLT_INT(myStatus));
         myService->fireMyStatusEvent(myStatus++); // broadcast
+
+        printf("wait for 5 seconds ...\n");
+        DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING("wait for 5 seconds ..."));
         std::this_thread::sleep_for(std::chrono::seconds(5));
+
         count++;
-        data.setName("Alice" + std::to_string(count));
+        data.setName("Alice_" + std::to_string(count));
+        printf("++++++++++setStudentDataAttribute: studentdata =  %s\n", toString(data).c_str());
+        DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING("++++++++++setStudentDataAttribute: studentdata = "), DLT_STRING(toString(data).c_str()));
         myService->setStudentDataAttribute(data);
     }
 
