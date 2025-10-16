@@ -9,15 +9,15 @@ if ! command -v ts &> /dev/null; then
 fi
 pushd tools
 #install essential tools
-./install_essential_tools.sh | tee $LOG_FILE
+./install_essential_tools.sh | sudo tee $LOG_FILE
 #install vsomeip and dependencies
 if ! command -v ts &> /dev/null; then
-    ./install_vsomeip.sh 2>&1 | tee -a $LOG_FILE
-    ./install_capi_someip.sh 2>&1 | tee -a $LOG_FILE
-    ./install_fidl_gen.sh 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a $LOG_FILE
+    ./install_vsomeip.sh 2>&1 | sudo tee -a $LOG_FILE
+    ./install_capi_someip.sh 2>&1 | sudo tee -a $LOG_FILE
+    ./install_fidl_gen.sh 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | sudo tee -a $LOG_FILE
 else
-    ./install_vsomeip.sh 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a $LOG_FILE
-    ./install_capi_someip.sh 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a $LOG_FILE
-    ./install_fidl_gen.sh 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | tee -a $LOG_FILE
+    ./install_vsomeip.sh 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | sudo tee -a $LOG_FILE
+    ./install_capi_someip.sh 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | sudo tee -a $LOG_FILE
+    ./install_fidl_gen.sh 2>&1 | ts '[%Y-%m-%d %H:%M:%S]' | sudo tee -a $LOG_FILE
 fi
 popd

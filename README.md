@@ -41,14 +41,15 @@ sudo apt install -y net-tools netcat socat tcpdump
 # Clone example and install dependencies
 git clone https://github.com/minhthedt/vsomeip-example.git
 cd vsomeip-example
-sudo ./set_env.sh 2>&1 | tee log.txt
+./set_env.sh
+# Log output: ./vsomeip-example/set_env.log
 ```
 
 ### 2️⃣ Build vsomeip-example
 
 ```bash
 cd vsomeip-example
-sudo ./build.sh
+./build.sh
 # Output: ./vsomeip-example/bin/...
 ```
 
@@ -71,10 +72,10 @@ netstat -rn
 
 ```bash
 # Sender
-echo "Hello multicast" | socat - UDP4-DATAGRAM:239.0.0.1:12345
+echo "Hello multicast" | socat - UDP4-DATAGRAM:224.224.224.245:30490
 
 # Receiver
-socat -v UDP4-RECVFROM:12345,ip-add-membership=239.0.0.1:0.0.0.0,fork -
+socat -v UDP4-RECVFROM:30490,ip-add-membership=224.224.224.245:0.0.0.0,fork -
 ```
 <p align="center">
     <img src="doc/picture/testmuticast.png" alt="Test Multicast" width="500"/>

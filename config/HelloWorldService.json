@@ -15,7 +15,7 @@
     "applications" :
     [
         {
-            "name" : "service-sample",
+            "name" : "HelloWorldService",
             "id" : "0x1212"
         }
     ],
@@ -30,9 +30,9 @@
             [
                 {
                     "event" : "0x8778",
-                    "is_field" : "true",
+                    "is_field" : "false",
                     "cycle" : 2000,
-                    "is_reliable" : "false"
+                    "is_reliable" : "true"
                 },
                 {
                     "event" : "0x8779",
@@ -45,9 +45,7 @@
             [
                 {
                     "eventgroup" : "0x4465",
-                    "multicast" : {"address" : "224.244.224.246", "port" : "30507" },
-                    "events" : [ "0x8778" ],
-                    "threshold" : "1"
+                     "events" : [ "0x8778" ]
                 },
                 {
                     "eventgroup" : "0x8779",
@@ -58,7 +56,7 @@
             ]
         }
     ],
-    "routing" : "service-sample",
+    "routing" : "HelloWorldService",
     "service-discovery" :
     {
         "enable" : "true",

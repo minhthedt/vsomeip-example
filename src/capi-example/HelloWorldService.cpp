@@ -28,7 +28,7 @@ int main() {
 
     std::string domain = "local";
     std::string instance = "commonapi.examples.HelloWorld";
-    std::string connection = "service-sample";
+    std::string connection = "HelloWorldService";
 
     // register service to someipsd
     std::shared_ptr<HelloWorldStubImpl> myService = std::make_shared<HelloWorldStubImpl>();

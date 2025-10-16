@@ -42,7 +42,7 @@ install_Cmake() {
         export CXXFLAGS="-O2 -g -Wall"
         export LDFLAGS="-L/usr/local/lib -lm"
         sudo ./bootstrap --prefix="$INSTALL_DIR"
-        sudo make -j16
+        sudo make -j4
         sudo make install
         popd
         export PATH=$PATH:/usr/local/bin/
@@ -83,8 +83,8 @@ install_Boost() {
             sudo git clone --branch $BOOST_BRANCH --recursive https://github.com/boostorg/boost.git $BOOST_SRC_DIR
         fi
         pushd $BOOST_SRC_DIR
-        sudo ./bootstrap.sh --prefix="$INSTALL_DIR"
-        sudo ./b2 install
+        sudo ./bootstrap.sh --prefix="$INSTALL_DIR" --without-libraries=python
+        sudo ./b2 install --without-python
         echo "[OK] Boost $BOOST_BRANCH installed successfully"
         popd
     fi
@@ -99,7 +99,7 @@ install_dlt_daemon() {
         cd dlt-daemon || exit 1
         sudo mkdir build && cd build || exit 1
         sudo cmake .. || exit 1
-        sudo make -j"$(nproc)" || exit 1
+        sudo make -j4 || exit 1
         sudo make install || exit 1
         cd / || exit 1
         echo "[OK] dlt-daemon installed successfully."
@@ -134,7 +134,7 @@ install_vsomeip() {
 
     sudo cmake -Bbuild -DDISABLE_DLT=0 -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" \
         -DENABLE_SIGNAL_HANDLING=1 -DCMAKE_CXX_FLAGS="-Wno-unused-variable" .
-    sudo cmake --build build --target install -j8
+    sudo cmake --build build --target install -j4
 }
 
 install_Cmake

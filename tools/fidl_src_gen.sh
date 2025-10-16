@@ -33,13 +33,13 @@ check_and_install_java
 
 
 if [ -f "$CAPI_CORE_BIN" ]; then
-    sudo $CAPI_CORE_BIN -d $FIDL_CORE_SRC_GEN -sk $FIDL_FILE
+    $CAPI_CORE_BIN -d $FIDL_CORE_SRC_GEN -sk $FIDL_FILE
 else 
     echo "Error: not found $CAPI_CORE_BIN"
 fi
 
 if [ -f "$CAPI_SOMEIP_BIN" ]; then
-    sudo $CAPI_SOMEIP_BIN -d $FIDL_SOMEIP_SRC_GEN  $FDEPL_FILE
+    $CAPI_SOMEIP_BIN -d $FIDL_SOMEIP_SRC_GEN  $FDEPL_FILE
 else 
     echo "Error: not found $CAPI_CORE_BIN"
 fi

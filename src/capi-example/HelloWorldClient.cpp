@@ -42,7 +42,7 @@ int main() {
 
     std::string domain = "local";
     std::string instance = "commonapi.examples.HelloWorld";
-    std::string connection = "client-sample";
+    std::string connection = "HelloWorldClient";
 
     std::shared_ptr<HelloWorldProxy<>> myProxy = runtime->buildProxy<HelloWorldProxy>(domain,
             instance, connection);
@@ -81,6 +81,7 @@ int main() {
         myProxy->setValue(myValue, callStatus, &info);
         if (callStatus != CommonAPI::CallStatus::SUCCESS) {
             printf("ERROR:setValue(%d) callStatus=%d\n", myValue, static_cast<uint32_t>(callStatus));
+            DLT_LOG(my_dlt_context, DLT_LOG_ERROR, DLT_STRING("ERROR:setValue(%d) callStatus= "), DLT_INT(static_cast<uint32_t>(callStatus)));
         }
 
         //[SYNC] request&response
@@ -94,6 +95,7 @@ int main() {
             return -1;
         }
         printf("----------SET Method: calculateSum(%d, %d) = %d\n", a, b, sum);
+        DLT_LOG(my_dlt_context, DLT_LOG_INFO, DLT_STRING("----------SET Method: calculateSum(3, 4) = "), DLT_INT(sum));
 
         //[ASYNC] request&response
         myProxy->sayHelloAsync(name, sayHello_cb, &info);

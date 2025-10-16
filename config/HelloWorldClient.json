@@ -18,11 +18,11 @@
     "applications" :
     [
         {
-            "name" : "client-sample",
+            "name" : "HelloWorldClient",
             "id" : "0x1313"
         }
     ],
-     "services" :
+    "services" :
     [
         {
             "service" : "0x1234",
@@ -33,9 +33,9 @@
             [
                 {
                     "event" : "0x8778",
-                    "is_field" : "true",
+                    "is_field" : "false",
                     "cycle" : 2000,
-                    "is_reliable" : "false"
+                    "is_reliable" : "true"
                 },
                 {
                     "event" : "0x8779",
@@ -48,9 +48,7 @@
             [
                 {
                     "eventgroup" : "0x4465",
-                    "multicast" : {"address" : "224.244.224.246", "port" : "30506" },
-                    "events" : [ "0x8778" ],
-                    "threshold" : "1"
+                     "events" : [ "0x8778" ]
                 },
                 {
                     "eventgroup" : "0x8779",
@@ -69,7 +67,7 @@
             "reliable" : ["33333", "33334"]
         }
     ],
-    "routing" : "client-sample",
+    "routing" : "HelloWorldClient",
     "service-discovery" :
     {
         "enable" : "true",

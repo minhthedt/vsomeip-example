@@ -1,6 +1,6 @@
-rm -rf build
-mkdir build
+sudo rm -rf build
+sudo mkdir build
 cd build
-cmake ..
-make -j"$(nproc)"
-make install
+sudo cmake ..
+sudo make -j"$(nproc)"
+sudo make install
